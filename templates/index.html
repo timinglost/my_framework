@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+  Главная
+{% endblock %}
+{% block style %}
+  {% include "inc_style.html" %}
+{% endblock %}
+{% block header %}
+  {% include "inc_header.html" %}
+{% endblock %}
+{% block sidebar %}
+  {% include "inc_sidebar.html" %}
+{% endblock %}
+{% block content %}
+  <div id="content">
+        <!-- insert the page content here -->
+        <h1>Добро пожаловать в MY_shop</h1>
+        <p>Мы рады приветствовать вас.</p>
+        <h2>Большой ассортимент техники</h2>
+        <p>У нас есть:</p>
+        <ul>
+          <li>Смартфоны</li>
+          <li>Ноутбуки</li>
+          <li>Аксессуары</li>
+        </ul>
+      </div>
+{% endblock %}
+{% block footer %}
+  {% include "inc_footer.html" %}
+{% endblock %}
