@@ -1,6 +1,7 @@
 from datetime import date
 import socket
-from views import Index, About, Shop, Contacts
+from views import Index, About, Shop, Contacts, CreateNews, \
+    CreateUser, CreateCategory, CreateProduct
 
 
 def date_request(request):
@@ -17,5 +18,9 @@ routes = {
     '/': Index(),
     '/about/': About(),
     '/shop/': Shop(),
-    '/contacts/': Contacts()
+    '/contacts/': Contacts(),
+    '/create_news/': CreateNews(),
+    '/create_category/': CreateCategory(),
+    '/create_product/': CreateProduct(),
+    '/create_users/': CreateUser()
 }
