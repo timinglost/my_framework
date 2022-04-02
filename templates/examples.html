@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}
+  Магазин
+{% endblock %}
+{% block style %}
+  {% include "inc_style.html" %}
+{% endblock %}
+{% block header %}
+  {% include "inc_header.html" %}
+{% endblock %}
+{% block sidebar %}
+  {% include "inc_sidebar.html" %}
+{% endblock %}
+{% block content %}
+      <div id="content">
+      {% for item in categories_list %}
+        <h1>{{item.name}}</h1>
+        {% for prod in product_list %}
+          {% if prod.category.id == item.id %}
+            <h5>{{prod.name}}</h5>
+          <span class="left"><img src="images/graphic.png" alt="example graphic" /></span>
+          <p>
+            {{prod.description}}
+          </p>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+
+<!--        <h2>Смартфон 2</h2>-->
+<!--        <p>Быстрый, надёжный:</p>-->
+<!--        <span class="left"><img src="images/graphic.png" alt="example graphic" /></span>-->
+<!--        <p>-->
+<!--          Описание 2.-->
+<!--        </p>-->
+<!--        <span class="center"><img src="images/graphic.png" alt="example graphic" /></span>-->
+<!--        <span class="right"><img src="images/graphic.png" alt="example graphic" /></span>-->
+<!--        <p>-->
+<!--          Описание 2.-->
+<!--        </p>-->
+<!--        <h2>Смартфон 2</h2>-->
+<!--        <p>Быстрый, надёжный:</p>-->
+<!--        <span class="left"><img src="images/graphic.png" alt="example graphic" /></span>-->
+<!--        <p>-->
+<!--          Описание 2.-->
+<!--        </p>-->
+<!--        <span class="center"><img src="images/graphic.png" alt="example graphic" /></span>-->
+<!--        <span class="right"><img src="images/graphic.png" alt="example graphic" /></span>-->
+<!--        <p>-->
+<!--          Описание 2.-->
+<!--        </p>-->
+<!--        <h2>Таблица ноутбуков</h2>-->
+<!--        <p>На складе есть:</p>-->
+<!--        <table style="width:100%; border-spacing:0;">-->
+<!--          <tr><th>Производитель</th><th>Модель</th></tr>-->
+<!--          <tr><td>Lenovo</td><td>H3000</td></tr>-->
+<!--          <tr><td>HP</td><td>h2000</td></tr>-->
+<!--          <tr><td>Apple</td><td>iMac 2007</td></tr>-->
+<!--        </table>-->
+<!--&lt;!&ndash;        <h2>Form Elements</h2>&ndash;&gt;-->
+<!--&lt;!&ndash;        <form action="#" method="post">&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="form_settings">&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><span>Form field example</span><input type="text" name="name" value="" /></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><span>Textarea example</span><textarea rows="8" cols="50" name="name"></textarea></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><span>Checkbox example</span><input class="checkbox" type="checkbox" name="name" value="" /></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><span>Dropdown list example</span><select id="id" name="name"><option value="1">Example 1</option><option value="2">Example 2</option></select></p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="name" value="button" /></p>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </form>&ndash;&gt;-->
+<!--      </div>-->
+{% endblock %}
+{% block footer %}
+  {% include "inc_footer.html" %}
+{% endblock %}
