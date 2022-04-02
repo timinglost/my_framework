@@ -24,6 +24,15 @@
           <li>Аксессуары</li>
         </ul>
       </div>
+        <h1>Список пользователей</h1>
+        <h2>Админы</h2>
+        {% for item in admins_list %}
+            <p>{{item.login}} {{item.email}}</p>
+        {% endfor %}
+        <h2>Покупатели</h2>
+        {% for item in buyers_list %}
+            <p>{{item.login}} {{item.email}}</p>
+        {% endfor %}
 {% endblock %}
 {% block footer %}
   {% include "inc_footer.html" %}

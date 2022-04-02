@@ -119,4 +119,30 @@ class CreateProduct:
 
 
 class CreateUser:
-    pass
+    def __call__(self, request):
+        if request['method'] == 'POST':
+            data = request['data']
+
+            login = data['login']
+            password = data['password']
+            email = data['email']
+            type_ = data['type_']
+            login = site.decode_value(login)
+            password = site.decode_value(password)
+            email = site.decode_value(email)
+            type_ = site.decode_value(type_)
+            new_user = site.create_user(type_, login, password, email)
+            if type_ == 'buyer':
+                site.buyers.append(new_user)
+            else:
+                site.admins.append(new_user)
+            return '200 OK', render('index.html',
+                                    buyers_list=site.buyers,
+                                    admins_list=site.admins,
+                                    date=request.get('date', None),
+                                    news_list=site.news)
+        else:
+            return '200 OK', render('create_users.html',
+                                    categories_list=site.categories,
+                                    date=request.get('date', None),
+                                    news_list=site.news)
