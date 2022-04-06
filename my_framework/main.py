@@ -29,18 +29,18 @@ class Framework:
             data = PostRequests().get_request_params(environ)
             request['data'] = Framework.decode_value(data)
             print(f'Нам пришёл post-запрос: {Framework.decode_value(data)}')
-            count_file = len(glob.glob('get_post_json/post_*.json'))
-            with open(f'get_post_json/post_{count_file}.json', 'w') as json_file:
-                json.dump(Framework.decode_value(data), json_file, indent=4)
+            # count_file = len(glob.glob('get_post_json/post_*.json'))
+            # with open(f'get_post_json/post_{count_file}.json', 'w') as json_file:
+            #     json.dump(Framework.decode_value(data), json_file, indent=4)
         if method == 'GET':
             request_params = GetRequests().get_request_params(environ)
             request['request_params'] = Framework.decode_value(request_params)
             print(f'Нам пришли GET-параметры:'
                   f' {Framework.decode_value(request_params)}')
-            if len(Framework.decode_value(request_params)) != 0:
-                count_file = len(glob.glob('get_post_json/get_*.json'))
-                with open(f'get_post_json/get_{count_file}.json', 'w') as json_file:
-                    json.dump(Framework.decode_value(request_params), json_file, indent=4)
+            # if len(Framework.decode_value(request_params)) != 0:
+            #     count_file = len(glob.glob('get_post_json/get_*.json'))
+            #     with open(f'get_post_json/get_{count_file}.json', 'w') as json_file:
+            #         json.dump(Framework.decode_value(request_params), json_file, indent=4)
 
         if path in self.routes_lst:
             view = self.routes_lst[path]

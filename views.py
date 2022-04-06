@@ -146,3 +146,27 @@ class CreateUser:
                                     categories_list=site.categories,
                                     date=request.get('date', None),
                                     news_list=site.news)
+
+
+class CopyProduct:
+    def __call__(self, request):
+        request_params = request['request_params']
+
+        try:
+            name = request_params['name']
+
+            old_course = site.get_product(name)
+            if old_course:
+                new_name = f'copy_{name}'
+                new_product = old_course.clone()
+                new_product.name = new_name
+                site.products.append(new_product)
+
+            return '200 OK', render('examples.html',
+                                    categories_list=site.categories,
+                                    product_list=site.products,
+                                    date=request.get('date', None),
+                                    news_list=site.news,
+                                    name=new_product.category.name)
+        except KeyError:
+            return '200 OK', 'No courses have been added yet'

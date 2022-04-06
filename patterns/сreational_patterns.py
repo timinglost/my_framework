@@ -112,7 +112,7 @@ class Engine:
     def create_product(type_, name, description, category):
         return ProductFactory.create(type_, name, category, description)
 
-    def get_course(self, name):
+    def get_product(self, name):
         for item in self.products:
             if item.name == name:
                 return item
