@@ -1,19 +1,25 @@
 from my_framework.templator import render
 from patterns.сreational_patterns import Engine
+from patterns.structural_patterns import AppRoute, Debug
 
 site = Engine()
 
+routes = {}
 
+
+@AppRoute(routes=routes, url='/')
 class Index:
     def __call__(self, request):
         return '200 OK', render('index.html', date=request.get('date', None), news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/about/')
 class About:
     def __call__(self, request):
         return '200 OK', render('page.html', date=request.get('date', None), news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/shop/')
 class Shop:
     def __call__(self, request):
         return '200 OK', render('examples.html', date=request.get('date', None),
@@ -22,6 +28,7 @@ class Shop:
                                 news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/contacts/')
 class Contacts:
     def __call__(self, request):
         return '200 OK', render('contact.html',
@@ -29,6 +36,7 @@ class Contacts:
                                 news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/create_category/')
 class CreateCategory:
     def __call__(self, request):
 
@@ -62,6 +70,7 @@ class CreateCategory:
                                     news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/create_news/')
 class CreateNews:
     def __call__(self, request):
         if request['method'] == 'POST':
@@ -84,6 +93,7 @@ class CreateNews:
             return '200 OK', render('create_news.html', date=request.get('date', None), news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/create_product/')
 class CreateProduct:
     def __call__(self, request):
         if request['method'] == 'POST':
@@ -118,6 +128,7 @@ class CreateProduct:
                                     news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/create_users/')
 class CreateUser:
     def __call__(self, request):
         if request['method'] == 'POST':
@@ -148,6 +159,7 @@ class CreateUser:
                                     news_list=site.news)
 
 
+@AppRoute(routes=routes, url='/copy_product/')
 class CopyProduct:
     def __call__(self, request):
         request_params = request['request_params']
