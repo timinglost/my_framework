@@ -1,8 +1,15 @@
+import logging
+
 from my_framework.templator import render
-from patterns.сreational_patterns import Engine
+from patterns.сreational_patterns import Engine, Logger
 from patterns.structural_patterns import AppRoute, Debug
+from patterns.behavioral_patterns import EmailNotifier, SmsNotifier, \
+    ListView, CreateView, FileWriter, ConsoleWriter, BaseSerializer
 
 site = Engine()
+email_notifier = EmailNotifier()
+sms_notifier = SmsNotifier()
+logger = Logger('main', FileWriter())
 
 routes = {}
 
@@ -56,6 +63,7 @@ class CreateCategory:
             new_category = site.create_category(name, category)
 
             site.categories.append(new_category)
+            logger.log('Add Category')
 
             return '200 OK', render('examples.html',
                                     categories_list=site.categories,
@@ -115,6 +123,8 @@ class CreateProduct:
             category_id = site.decode_value(category_id)
             category = site.find_category_by_id(int(category_id))
             new_product = site.create_product(type_, name, description, category)
+            new_product.observers.append(email_notifier)
+            new_product.observers.append(sms_notifier)
             site.products.append(new_product)
             return '200 OK', render('examples.html',
                                     categories_list=site.categories,
@@ -182,3 +192,31 @@ class CopyProduct:
                                     name=new_product.category.name)
         except KeyError:
             return '200 OK', 'No courses have been added yet'
+
+
+@AppRoute(routes=routes, url='/add_buyer/')
+class AddStudentByCourseCreateView(CreateView):
+    template_name = 'add_buyer.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['products'] = site.products
+        context['buyers'] = site.buyers
+        context['news_list'] = site.news
+        return context
+
+    def create_obj(self, data: dict):
+        product_name = data['product_name']
+        product_name = site.decode_value(product_name)
+        product = site.get_product(product_name)
+        buyers_name = data['buyers_name']
+        buyers_name = site.decode_value(buyers_name)
+        student = site.get_buyer(buyers_name)
+        product.add_student(student)
+
+
+@AppRoute(routes=routes, url='/api/')
+class CourseApi:
+    @Debug(name='CourseApi')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.categories).save()

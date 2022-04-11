@@ -1,5 +1,6 @@
 from copy import deepcopy
 from quopri import decodestring
+from patterns.behavioral_patterns import Subject, FileWriter, ConsoleWriter
 
 
 class News:
@@ -21,7 +22,9 @@ class Admin(User):
 
 
 class Buyer(User):
-    pass
+    def __init__(self, login, password, email):
+        self.trackings = []
+        super().__init__(login, password, email)
 
 
 class UserFactory:
@@ -40,14 +43,23 @@ class ProductPrototype:
         return deepcopy(self)
 
 
-class Product(ProductPrototype):
+class Product(ProductPrototype, Subject):
 
     def __init__(self, name, category, description):
         self.name = name
         self.description = description
         self.category = category
         self.category.products.append(self)
+        self.buyers = []
+        super().__init__()
 
+    def __getitem__(self, item):
+        return self.buyers[item]
+
+    def add_student(self, buyer: Buyer):
+        self.buyers.append(buyer)
+        buyer.trackings.append(self)
+        self.notify()
 
 class PremiumProduct(Product):
     pass
@@ -118,6 +130,11 @@ class Engine:
                 return item
         return None
 
+    def get_buyer(self, login):
+        for item in self.buyers:
+            if item.login == login:
+                return item
+
     @staticmethod
     def create_news(header, date, text):
         return News(header, date, text)
@@ -127,3 +144,33 @@ class Engine:
         val_b = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
         val_decode_str = decodestring(val_b)
         return val_decode_str.decode('UTF-8')
+
+
+class SingletonByName(type):
+
+    def __init__(cls, name, bases, attrs, **kwargs):
+        super().__init__(name, bases, attrs)
+        cls.__instance = {}
+
+    def __call__(cls, *args, **kwargs):
+        if args:
+            name = args[0]
+        if kwargs:
+            name = kwargs['name']
+
+        if name in cls.__instance:
+            return cls.__instance[name]
+        else:
+            cls.__instance[name] = super().__call__(*args, **kwargs)
+            return cls.__instance[name]
+
+
+class Logger(metaclass=SingletonByName):
+
+    def __init__(self, name, writer=FileWriter()):
+        self.name = name
+        self.writer = writer
+
+    def log(self, text):
+        text = f'log---> {text}'
+        self.writer.write(text)
