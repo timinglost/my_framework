@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+  Потдержка
+{% endblock %}
+{% block style %}
+  {% include "inc_style.html" %}
+{% endblock %}
+{% block header %}
+  {% include "inc_header.html" %}
+{% endblock %}
+{% block sidebar %}
+  {% include "inc_sidebar.html" %}
+{% endblock %}
+{% block content %}
+      <div id="content">
+        <h1>Добавление покупателя в отслеживание товара</h1>
+        <form method="post">
+            <div class="form_settings">
+                <p>Продукты</p>
+            <select id="id_product_name" name="product_name">
+                {% for item in products %}
+                <option value="{{item.name}}">{{item.name}}</option>
+                {% endfor %}
+            </select>
+                <p>Пользователи</p>
+            <select id="id_buyers_name" name="buyers_name">
+                {% for item in buyers %}
+                <option value="{{item.login}}">{{item.login}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Записать</button>
+                </div>
+        </form>
+      </div>
+{% endblock %}
+{% block footer %}
+  {% include "inc_footer.html" %}
+{% endblock %}
