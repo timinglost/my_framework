@@ -1,7 +1,8 @@
 import logging
 
 from my_framework.templator import render
-from patterns.сreational_patterns import Engine, Logger
+from patterns.architectural_system_pattern_unit_of_work import UnitOfWork
+from patterns.сreational_patterns import Engine, Logger, MapperRegistry
 from patterns.structural_patterns import AppRoute, Debug
 from patterns.behavioral_patterns import EmailNotifier, SmsNotifier, \
     ListView, CreateView, FileWriter, ConsoleWriter, BaseSerializer
@@ -10,6 +11,8 @@ site = Engine()
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
 logger = Logger('main', FileWriter())
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 routes = {}
 
@@ -138,35 +141,63 @@ class CreateProduct:
                                     news_list=site.news)
 
 
-@AppRoute(routes=routes, url='/create_users/')
-class CreateUser:
-    def __call__(self, request):
-        if request['method'] == 'POST':
-            data = request['data']
+@AppRoute(routes=routes, url='/buyers_list/')
+class BuyersListView(ListView):
+    template_name = 'buyers_list.html'
 
-            login = data['login']
-            password = data['password']
-            email = data['email']
-            type_ = data['type_']
-            login = site.decode_value(login)
-            password = site.decode_value(password)
-            email = site.decode_value(email)
-            type_ = site.decode_value(type_)
-            new_user = site.create_user(type_, login, password, email)
-            if type_ == 'buyer':
-                site.buyers.append(new_user)
-            else:
-                site.admins.append(new_user)
-            return '200 OK', render('index.html',
-                                    buyers_list=site.buyers,
-                                    admins_list=site.admins,
-                                    date=request.get('date', None),
-                                    news_list=site.news)
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('buyers')
+        return mapper.all()
+
+
+@AppRoute(routes=routes, url='/create_users/')
+class CreateUserView(CreateView):
+    template_name = 'create_users.html'
+    def create_obj(self, data: dict):
+        login = data['login']
+        password = data['password']
+        email = data['email']
+        type_ = data['type_']
+        login = site.decode_value(login)
+        password = site.decode_value(password)
+        email = site.decode_value(email)
+        type_ = site.decode_value(type_)
+        new_user = site.create_user(type_, login, password, email)
+        if type_ == 'buyer':
+            site.buyers.append(new_user)
+            new_user.mark_new()
+            UnitOfWork.get_current().commit()
         else:
-            return '200 OK', render('create_users.html',
-                                    categories_list=site.categories,
-                                    date=request.get('date', None),
-                                    news_list=site.news)
+            site.admins.append(new_user)
+# @AppRoute(routes=routes, url='/create_users/')
+# class CreateUser:
+#     def __call__(self, request):
+#         if request['method'] == 'POST':
+#             data = request['data']
+#
+#             login = data['login']
+#             password = data['password']
+#             email = data['email']
+#             type_ = data['type_']
+#             login = site.decode_value(login)
+#             password = site.decode_value(password)
+#             email = site.decode_value(email)
+#             type_ = site.decode_value(type_)
+#             new_user = site.create_user(type_, login, password, email)
+#             if type_ == 'buyer':
+#                 site.buyers.append(new_user)
+#             else:
+#                 site.admins.append(new_user)
+#             return '200 OK', render('index.html',
+#                                     buyers_list=site.buyers,
+#                                     admins_list=site.admins,
+#                                     date=request.get('date', None),
+#                                     news_list=site.news)
+#         else:
+#             return '200 OK', render('create_users.html',
+#                                     categories_list=site.categories,
+#                                     date=request.get('date', None),
+#                                     news_list=site.news)
 
 
 @AppRoute(routes=routes, url='/copy_product/')
