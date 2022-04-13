@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}
+  Потдержка
+{% endblock %}
+{% block style %}
+  {% include "inc_style.html" %}
+{% endblock %}
+{% block header %}
+  {% include "inc_header.html" %}
+{% endblock %}
+{% block sidebar %}
+  {% include "inc_sidebar.html" %}
+{% endblock %}
+{% block content %}
+      <div id="content">
+            <div>
+		<li>
+			<a href="/create_users/">Создать покупателя</a>
+		</li>
+		<li>
+			<a href="/add_buyer/">Подписать</a>
+		</li>
+	</div>
+    <h1>Список покупателей</h1>
+    <div>
+
+        {% for item in objects_list %}
+        <li>
+            {{item.login}} {{item.email}}
+            {% for track in item.trackings %}
+                {{track.name}}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </div>
+      </div>
+{% endblock %}
+{% block footer %}
+  {% include "inc_footer.html" %}
+{% endblock %}
